@@ -1,7 +1,7 @@
 <?php
 /**
 * Plugin Name: Easy Digital Download License Activator Notifier
-* Plugin URI: http://www.frndzit.com/edd-license-activated-notifier
+* Plugin URI: https://github.com/tjthouhid/edd-license-activator-notifier
 * Description: This is a plugin for Easy Digital Download Software License Activator Notification Show on Dashboard as widget.
 * Version: 1.0.1
 * Author: Tj Thouhid
