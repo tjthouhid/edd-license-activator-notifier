@@ -3,7 +3,7 @@
 * Plugin Name: Easy Digital Download License Activator Notifier
 * Plugin URI: https://github.com/tjthouhid/edd-license-activator-notifier
 * Description: This is a plugin for Easy Digital Download Software License Activator Notification Show on Dashboard as widget.
-* Version: 1.0.2
+* Version: 1.0.3
 * Author: Tj Thouhid
 * Author URI: https://www.tjthouhid.com
 * License: GPLv2 or later
