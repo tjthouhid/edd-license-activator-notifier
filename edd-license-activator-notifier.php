@@ -3,7 +3,7 @@
 * Plugin Name: Easy Digital Download License Activator Notifier
 * Plugin URI: https://github.com/tjthouhid/edd-license-activator-notifier
 * Description: This is a plugin for Easy Digital Download Software License Activator Notification Show on Dashboard as widget.
-* Version: 1.0.1
+* Version: 1.0.2
 * Author: Tj Thouhid
 * Author URI: https://www.tjthouhid.com
 * License: GPLv2 or later
@@ -32,6 +32,8 @@ function edd_notification_tbl_jal_install() {
 		customer_email varchar(100) NOT NULL,
 		customer_id int(25) NOT NULL,
 		site_url varchar(255) NOT NULL,
+		site_url varchar(255) NOT NULL,
+		type enum('1','0') NOT NULL DEFAULT '1'
 		PRIMARY KEY  (n_id)
 	) $charset_collate;";
  
@@ -83,8 +85,7 @@ function new_edd_sl_process_add_site() {
 	 
 	$customer_id = $payment->customer_id;
 	$email=$emails[0];
-	//print_r($emails);
-	//exit;
+
 	if ( $license_id !== $license->ID ) {
 		return;
 	}
@@ -137,9 +138,74 @@ function new_edd_sl_process_add_site() {
 remove_action('edd_insert_site', 'edd_sl_process_add_site');
 add_action( 'edd_insert_site', 'new_edd_sl_process_add_site' );
 
+/**
+ * Processes the Deactivate Site button
+ *
+ * @since       2.4
+ * @return      void
+*/
+function new_edd_sl_process_deactivate_site() {
+	if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'edd_deactivate_site_nonce' ) ) {
+		return;
+	}
+
+	$license_id = absint( $_GET['license'] );
+	$edd_software_licensing=edd_software_licensing();
+	$license    = $edd_software_licensing->get_license( $license_id );
+
+	$emails=edd_software_licensing()->get_emails_for_license( $license_id );
+	$payment_id  = $edd_software_licensing->get_payment_id( $license_id );
+	$payment     = new EDD_Payment( $payment_id );
+	 
+	$customer_id = $payment->customer_id;
+	$email=$emails[0];
+	if ( $license_id !== $license->ID ) {
+		return;
+	}
+
+	if ( ( is_admin() && ! current_user_can( 'edit_shop_payments' ) ) || ( ! is_admin() && $license->user_id != get_current_user_id() ) ) {
+		return;
+	}
+
+	$site_url = urldecode( $_GET['site_url'] );
+	$license->remove_site( $site_url );
+	global $wpdb;
+	$table_notification=$wpdb->prefix . 'edd_notification_tbl';
+
+	  $wpdb->insert( 
+	    $table_notification, 
+	    array( 
+	        'license_id' => $license_id, 
+	        'customer_email' => $email, 
+	        'site_url' => $site_url, 
+	        'customer_id' => $customer_id,
+	        'type' => '0'
+	    ), 
+	    array( 
+	        '%d', 
+	        '%s', 
+	        '%s', 
+	        '%d',
+	        '%s' 
+	    ) 
+	 );
+
+	wp_safe_redirect( remove_query_arg( array( 'edd_action', 'site_url', 'edd_sl_error', '_wpnonce' ) ) ); exit;
+}
+
+remove_action('edd_deactivate_site', 'edd_sl_process_deactivate_site');
+add_action( 'edd_deactivate_site', 'new_edd_sl_process_deactivate_site' );
+
+
 
 add_action('wp_dashboard_setup', 'edd_license_activated_notifier_dashboard_widgets');
-  
+
+/**
+ * Processes Adding Dashboard Widget
+ *
+ * @since       
+ * @return      void
+*/  
 function edd_license_activated_notifier_dashboard_widgets() {
 global $wp_meta_boxes;
 if ( current_user_can( apply_filters( 'edd_dashboard_stats_cap', 'view_shop_reports' ) ) ) { 

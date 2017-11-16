@@ -25,4 +25,10 @@ You will find ‘EDD Licenses Notification’ Widget in your WordPress admin das
 == Screenshots ==
  
 1. screenshot-1.png
- 
+
+== Changelog ==
+
+= 1.0.2 =
+* Now You can see Two Types of notfication.
+* One notification for deleted site_url.
+* Another for insert site_url Notification.

@@ -5,6 +5,7 @@
 		<thead>
 			<tr>
 				<th>Sl</th>
+				<th>Type</th>
 				<th>Email</th>
 				<th>Url</th>
 				<th>Action</th>
@@ -12,9 +13,12 @@
 			
 		</thead>
 		<tbody>
-			<?php if($total_data>0):$i=1;foreach($query as $row) : ?>
+			<?php if($total_data>0):$i=1;foreach($query as $row) : 
+			$type=($row->type=='1')?"Site Added":"Site Removed";
+			?>
 				<tr>
 					<td><?php echo $i;?></td>
+					<td><?php echo $type;?></td>
 					<td><a href="<?php echo site_url();?>/wp-admin/edit.php?post_type=download&page=edd-customers&view=overview&id=<?php echo $row->customer_id;?>"><?php echo $row->customer_email;?></a></td>
 					<td><?php echo $row->site_url;?></td>
 					<td><a href="<?php echo site_url();?>/wp-admin/edit.php?post_type=download&page=edd-licenses&view=overview&license=<?php echo $row->license_id;?>#edd-item-tables-wrapper" class="view-licence" title="View Licence Page"><span class="dashicons dashicons-visibility"></span></a><input type="checkbox" class="delete-notification" checked="" data-id="<?php echo $row->n_id;?>"></td>
