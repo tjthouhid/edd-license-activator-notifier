@@ -6,9 +6,8 @@ jQuery(document).ready(function($){
 				var n_id=dis.data('id');
 			    var data = {
 					'action': 'delete_edd_notification_nid',
-					'id': n_id      // We pass php values differently!
+					'id': n_id      // We pass notification id here!
 				};
-				// We can also pass the url value separately from ajaxurl for front end AJAX implementations
 				$.post(ajax_object.ajax_url, data, function(response) {
 					if(response==true){
 						dis.closest("tr").remove();
@@ -24,5 +23,9 @@ jQuery(document).ready(function($){
 
 
 	});
+	$("body").on("click",".full-screen-icon",function(e){
+		$(".notifier-widget").toggleClass('full-screen');
+	});
+	
     
 });
