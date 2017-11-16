@@ -1,4 +1,4 @@
-#=== Easy Digital Download License Activator Notifier ===
+# Easy Digital Download License Activator Notifier
 
 Tags: easy digital download, software licensing, widget, dashboard widget
 Requires at least: 3.0.1
