@@ -16,36 +16,46 @@
  */
 
 global $jal_db_version;
-$jal_db_version = '1.0';
+$jal_db_version = '1.1';
 
 function edd_notification_tbl_jal_install() {
-	global $wpdb;
-	global $jal_db_version;
 
+	global $wpdb;
+	$installed_ver = get_option( "edd_notification_plugin_db_version" );
+
+	if ( $installed_ver != $jal_db_version ) {
+		
+		make_edd_licence_db();
+		update_option( 'edd_notification_plugin_db_version', $jal_db_version );
+	}else{
+		
+		make_edd_licence_db();
+		add_option( 'edd_notification_plugin_db_version', $jal_db_version );
+
+	}
+}
+register_activation_hook( __FILE__, 'edd_notification_tbl_jal_install' );
+
+function make_edd_licence_db(){
+	global $wpdb;
 	$table_name = $wpdb->prefix . 'edd_notification_tbl';
 	
 	$charset_collate = $wpdb->get_charset_collate();
 
-	$sql = "CREATE TABLE $table_name (
+ 	$sql = "CREATE TABLE $table_name (
 		n_id int(25) NOT NULL AUTO_INCREMENT,
 		license_id int(25) NOT NULL,
 		customer_email varchar(100) NOT NULL,
 		customer_id int(25) NOT NULL,
 		site_url varchar(255) NOT NULL,
-		site_url varchar(255) NOT NULL,
-		type enum('1','0') NOT NULL DEFAULT '1'
+		type enum('1','0') NOT NULL DEFAULT '1',
 		PRIMARY KEY  (n_id)
 	) $charset_collate;";
- 
+	
 
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	dbDelta( $sql );
-
-	add_option( 'edd_notification_plugin_db_version', $jal_db_version );
 }
-register_activation_hook( __FILE__, 'edd_notification_tbl_jal_install' );
-
-
 /**
  * Delete Database On Deactive
  */
